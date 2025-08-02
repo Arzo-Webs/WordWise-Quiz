@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>WordWise Quiz</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+    body { background:#F0F8FF; color:#1e2a38; display:flex; flex-direction:column; min-height:100vh; }
+    header, footer { background:#4a90e2; color:white; padding:1rem; text-align:center; }
+    header.hidden, footer.hidden { display:none; }
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:2rem; }
+
+    .hidden { display:none !important; }
+    .center { text-align:center; }
+
+    .btn {
+      background:#4a90e2; color:white; border:none;
+      padding:0.75rem 1.5rem; font-size:1rem; border-radius:6px;
+      cursor:pointer; transition:background 0.2s;
+    }
+    .btn:hover:not(:disabled) { background:#357abd; }
+    .btn:disabled { background:#a0c4e8; cursor:not-allowed; }
+
+    .question h3 { font-size:1.3rem; margin-bottom:1.5rem; }
+    .btns { display:flex; flex-direction:column; gap:1rem; margin-bottom:1.5rem; }
+    .answer {
+      background:white; padding:0.75rem 1rem; border:1px solid #cdd7e1;
+      border-radius:5px; text-align:left; font-size:1rem; cursor:pointer;
+      transition:background 0.2s;
+    }
+    .answer:hover:not(:disabled) { background:#e9f2fc; }
+    .correct { background:#a5d6a7; border-color:#81c784; color:#1b3c24; }
+    .wrong { background:#ef9a9a; border-color:#e57373; color:#3e2723; }
+    
+    #show { margin-bottom:1rem; font-weight:500; }
+    #progress-container { background:#dfe7ef; height:6px; border-radius:3px; width:100%; margin-bottom:1rem; }
+    #progress-bar { width:0; height:100%; background:#4a90e2; transition:width 0.3s; }
+
+    @media (max-width:500px) {
+      .btn, .answer { font-size:0.95rem; }
+      .question h3 { font-size:1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="pageHeader"><h2>WordWise Quiz</h2></header>
+
+  <main>
+    <!-- Welcome -->
+    <section id="welcome" class="center">
+      <h1>Welcome to WordWise!</h1>
+      <p style="margin:1rem 0 2rem;">Sharpen your English vocabulary</p>
+      <button class="btn" onclick="startQuiz()">Start Quiz</button>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="hidden" style="max-width:600px; width:90%;">
+      <div class="question">
+        <h3>Loading question…</h3>
+        <div class="btns">
+          <button class="answer" onclick="checkAnswer(this)"></button>
+          <button class="answer" onclick="checkAnswer(this)"></button>
+          <button class="answer" onclick="checkAnswer(this)"></button>
+        </div>
+        <div id="show"></div>
+      </div>
+      <div id="progress-container"><div id="progress-bar"></div></div>
+      <button class="btn" id="next" onclick="nextQuestion()" disabled>Next</button>
+      <button class="btn" id="restart" onclick="restartQuiz()" style="display:none;">Restart</button>
+    </section>
+  </main>
+
+  <footer id="pageFooter"><p>&copy; 2025 WordWise</p></footer>
+
+  <!-- Audio -->
+  <audio id="correctSound" src="https://cdn.pixabay.com/download/audio/2022/02/23/audio_50cb4000d4.mp3?filename=success-1-6297.mp3" preload="auto"></audio>
+  <audio id="wrongSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7cf660c26c.mp3?filename=error-126627.mp3" preload="auto"></audio>
+
+  <script>
+    const questions = [
+      { text: "What is the meaning of 'generous'?", options: ["selfish", "kind and giving", "angry"], correct: "kind and giving" },
+      { text: "What does 'abundant' mean?", options: ["scarce", "plentiful", "empty"], correct: "plentiful" },
+      { text: "What is the meaning of 'meticulous'?", options: ["careless", "very careful and precise", "fast"], correct: "very careful and precise" },
+      { text: "What does 'eloquent' mean?", options: ["fluent and persuasive in speaking", "quiet", "confused"], correct: "fluent and persuasive in speaking" },
+      { text: "What is the meaning of 'resilient'?", options: ["weak", "able to recover quickly", "brittle"], correct: "able to recover quickly" }
+    ];
+    let currentQuestionIndex=0, score=0;
+
+    function startQuiz(){
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('quiz').classList.remove('hidden');
+      document.getElementById('pageHeader').classList.add('hidden');
+      document.getElementById('pageFooter').classList.add('hidden');
+      showQuestion(currentQuestionIndex);
+    }
+
+    function showQuestion(idx){
+      const q = questions[idx];
+      document.querySelector(".question h3").innerText = q.text;
+      document.querySelectorAll('.answer').forEach((btn,i)=>{
+        btn.innerText = q.options[i];
+        btn.disabled = false;
+        btn.classList.remove('correct','wrong');
+      });
+      document.getElementById('show').innerText = '';
+      document.getElementById('next').disabled = true;
+      document.getElementById('progress-bar').style.width = `${(idx/questions.length)*100}%`;
+    }
+
+    function checkAnswer(btn){
+      const chosen = btn.innerText;
+      const correct = questions[currentQuestionIndex].correct;
+      document.querySelectorAll('.answer').forEach(b=>{
+        b.disabled=true;
+        if(b.innerText===correct) b.classList.add('correct');
+        else if(b===btn) b.classList.add('wrong');
+      });
+      if(chosen===correct){ score++; document.getElementById('correctSound').play(); showMessage("✅ Well done!"); }
+      else{ document.getElementById('wrongSound').play(); showMessage(`❌ Oops! Correct: "${correct}"`); }
+      document.getElementById('next').disabled=false;
+    }
+
+    function showMessage(msg){ document.getElementById('show').innerText = msg; }
+
+    function nextQuestion(){
+      currentQuestionIndex++;
+      if(currentQuestionIndex < questions.length) showQuestion(currentQuestionIndex);
+      else finalize();
+    }
+
+    function finalize(){
+      document.querySelector(".question h3").innerText = `🎉 Completed! Your score: ${score}/${questions.length}`;
+      document.querySelector('.btns').innerHTML = '';
+      document.getElementById('show').innerText = '';
+      document.getElementById('next').style.display = 'none';
+      document.getElementById('restart').style.display = 'inline-block';
+      document.getElementById('progress-bar').style.width = '100%';
+    }
+
+    function restartQuiz(){
+      score=0; currentQuestionIndex=0;
+      document.getElementById('restart').style.display='none';
+      document.getElementById('next').style.display='inline-block';
+      document.getElementById('next').disabled=true;
+      document.getElementById('progress-bar').style.width='0';
+      document.querySelector('.btns').innerHTML = `
+        <button class="answer" onclick="checkAnswer(this)"></button>
+        <button class="answer" onclick="checkAnswer(this)"></button>
+        <button class="answer" onclick="checkAnswer(this)"></button>`;
+      showQuestion(0);
+    }
+  </script>
+</body>
+</html>
