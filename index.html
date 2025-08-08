@@ -81,13 +81,23 @@
   <audio id="wrongSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7cf660c26c.mp3?filename=error-126627.mp3" preload="auto"></audio>
 
   <script>
-    const questions = [
-      { text: "What is the meaning of 'generous'?", options: ["selfish", "kind and giving", "angry"], correct: "kind and giving" },
-      { text: "What does 'abundant' mean?", options: ["scarce", "plentiful", "empty"], correct: "plentiful" },
-      { text: "What is the meaning of 'meticulous'?", options: ["careless", "very careful and precise", "fast"], correct: "very careful and precise" },
-      { text: "What does 'eloquent' mean?", options: ["fluent and persuasive in speaking", "quiet", "confused"], correct: "fluent and persuasive in speaking" },
-      { text: "What is the meaning of 'resilient'?", options: ["weak", "able to recover quickly", "brittle"], correct: "able to recover quickly" }
-    ];
+   const questions = [
+  { text: "What is the meaning of 'generous'?", options: ["selfish", "kind and giving", "angry"], correct: "kind and giving" },
+  { text: "What does 'abundant' mean?", options: ["scarce", "plentiful", "empty"], correct: "plentiful" },
+  { text: "What is the meaning of 'meticulous'?", options: ["careless", "very careful and precise", "fast"], correct: "very careful and precise" },
+  { text: "What does 'eloquent' mean?", options: ["fluent and persuasive in speaking", "quiet", "confused"], correct: "fluent and persuasive in speaking" },
+  { text: "What is the meaning of 'resilient'?", options: ["weak", "able to recover quickly", "brittle"], correct: "able to recover quickly" },
+  { text: "What does 'alleviate' mean?", options: ["to increase pain", "to reduce or ease pain", "to ignore pain"], correct: "to reduce or ease pain" },
+  { text: "What is the meaning of 'convoluted'?", options: ["simple and clear", "boring and long", "extremely complex or difficult to follow"], correct: "extremely complex or difficult to follow" },
+  { text: "What does 'subsequently' mean?", options: ["before something happens", "during something", "after something happens"], correct: "after something happens" },
+  { text: "What is the meaning of 'elicit'?", options: ["to hide a response", "to force a reaction", "to draw out a response"], correct: "to draw out a response" },
+  { text: "What does 'plausible' mean?", options: ["completely false", "seeming reasonable or probable", "confusing"], correct: "seeming reasonable or probable" },
+  { text: "What does 'imminent' mean?", options: ["happened long ago", "not likely to happen", "about to happen very soon"], correct: "about to happen very soon" },
+  { text: "What is the meaning of 'ambiguous'?", options: ["clear and direct", "open to more than one interpretation", "easy to understand"], correct: "open to more than one interpretation" },
+  { text: "What does 'discrepancy' mean?", options: ["a clear match between two things", "a small error in math", "a lack of similarity between two things"], correct: "a lack of similarity between two things" },
+  { text: "What is the meaning of 'undermine'?", options: ["to support and encourage", "to weaken or damage", "to ignore something"], correct: "to weaken or damage" }
+];
+
     let currentQuestionIndex=0, score=0;
 
     function startQuiz(){
@@ -156,3 +166,4 @@
   </script>
 </body>
 </html>
+
